@@ -14,7 +14,7 @@ this file and include it in basic-server.js so that it actually works.
 
 const posts = [];
 
-let message_id = 0;
+let messageId = 0;
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -63,20 +63,34 @@ var requestHandler = function(request, response) {
     response.end(JSON.stringify(posts));
   } else if (method === 'POST') {
     response.writeHead(201, headers);
-    let post = '';
-    request.on('data', data => post += data);
-    request.on('end', () => {
-      post = JSON.parse(post);
+    request.on('data', (data) => {
+      post = JSON.parse(data);
       if (!post.username || !post.text) {
         response.writeHead(400, headers);
         return response.end();
       }
-      post.message_id = message_id++;
-      post.created_at = new Date();
-      response.end(JSON.stringify([post]));
+      post.messageId = messageId++;
+      post.createdAt = new Date();
       posts.push(post);
     });
+    response.end(JSON.stringify(post));
   }
+
+
+  //another way to handle post req.
+  // let post = '';
+  // request.on('data', data => post += data);
+  // request.on('end', () => {
+  //   post = JSON.parse(post);
+  //   if (!post.username || !post.text) {
+  //     response.writeHead(400, headers);
+  //     return response.end();
+  //   }
+  //   post.message_id = message_id++;
+  //   post.created_at = new Date();
+  //   posts.push(post);
+  //   response.end();
+  // });
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
