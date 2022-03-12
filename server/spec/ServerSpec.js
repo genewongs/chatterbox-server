@@ -91,4 +91,18 @@ describe('Node Server Request Listener Function', function() {
     expect(res._ended).to.equal(true);
   });
 
+  it('Should 400 when malformed data posts to /classes/messages', function() {
+    var stubMsg = {
+      //username: 'Jono',
+      text: 'Do my bidding!'
+    };
+    var req = new stubs.request('/classes/messages', 'POST', stubMsg);
+    var res = new stubs.response();
+
+    handler.requestHandler(req, res);
+
+    // Expect 201 Created response status
+    expect(res._responseCode).to.equal(400);
+  });
+
 });
